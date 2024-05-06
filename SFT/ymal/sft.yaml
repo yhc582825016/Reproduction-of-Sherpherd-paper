@@ -1,0 +1,50 @@
+# seed: 42
+# task_type: sft
+
+dataset:
+  train_data_path: ./SFT/data/shepherd/train-set.json
+  val_data_path: ./SFT/data/shepherd/test-set.json
+  test_data_path: ./SFT/data/shepherd/test-set.json
+#./AI_FeedBack/data/hh_rlhf/helpful_base_en_train.jsonl
+#./AI_FeedBack/data/hh_rlhf/helpful_base_en_test.jsonl
+  max_source_length: 400
+  max_target_length: 768
+  data_type: gsm8k
+
+model:
+  model_type: 'mistral'
+  offload: false
+  model_path: ./llm/mistral-7b
+#./llm/chatglm3-6b-base
+#./llm/opt-1b3
+train:
+  gradient_accumulation_steps: 1
+  learning_rate: 1e-5
+  lr_scheduler_type: cosine
+  per_device_eval_batch_size: 1
+  per_device_train_batch_size: 1
+  num_warmup_steps: 100
+  weight_decay: 0.1
+  num_train_epochs: 1
+  Dropout: 0.1
+  save_path: /ds-chat/SFT/checkpoint
+  beta: 0.5
+  lora_version: ''
+  lora_rank: 8
+
+deepspeed:
+  offload: false
+  zero_stage: 2
+
+log:
+  checkpoint_save_interval: 1000
+  eval_epoch_ratio: 0.2
+  eval_interval: 1000
+  project_name: 'SFT'
+  run_name: '307-lr1e5-mistral-gsm8k'
+  output_dir: ./SFT/checkpoint
+
+evaluator:
+  data_path: ''
+  checkpoint_path: ''
+  result_save_path: ''
